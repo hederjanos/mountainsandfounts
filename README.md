@@ -1,6 +1,6 @@
 # mountainsandfounts
 
-# description
+# description:
 
 This application generates random but roughly lifelike terrain with hills and valleys. Its size can be parametrized.
 The program finds one of the lowest point of the terrain and a spring bursts at this point and begins to fill the valleys.
