@@ -14,4 +14,4 @@ The application simulates this process. The visualization can be streamed to the
 - water flows into an adjacent valley and begins to saturate, so only the lowest water level always increases
 
 # example:
-![](C:\JAVAPROG\progmasters\mountainsandfounts\simulation.gif)simulation.gif
+https://github.com/hederjanos/mountainsandfounts/blob/master/simulation.gif
