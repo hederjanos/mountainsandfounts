@@ -3,7 +3,7 @@ package hu.hj.simulation;
 import hu.hj.gif.AnimatedGIF;
 import hu.hj.gif.Frame;
 import hu.hj.io.Printer;
-import hu.hj.terrain.Location;
+import hu.hj.terrain.GridLocation;
 import hu.hj.terrain.Terrain;
 
 import java.awt.*;
@@ -69,7 +69,7 @@ public class SimulationGIF extends Simulation {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 Color color;
-                Location location = terrain.getLocationAt(i, j);
+                GridLocation location = terrain.getLocationAt(i, j);
                 if (location.isFlooded()) {
                     color = colorMapOfFloodedArea.get(location.getHeight());
                 } else {

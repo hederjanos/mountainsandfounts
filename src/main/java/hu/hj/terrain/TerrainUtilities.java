@@ -5,13 +5,13 @@ public class TerrainUtilities {
     private TerrainUtilities() {
     }
 
-    public static Location[] getMinAndMaxLocationOfTerrain(Terrain terrain) {
-        Location min = terrain.getLocationAt(0, 0);
-        Location max = terrain.getLocationAt(0, 0);
+    public static GridLocation[] getMinAndMaxLocationOfTerrain(Terrain terrain) {
+        GridLocation min = terrain.getLocationAt(0, 0);
+        GridLocation max = terrain.getLocationAt(0, 0);
         int i = 0;
         while (i < terrain.getSize()) {
             for (int j = 0; j < terrain.getSize(); j++) {
-                Location currentLocation = terrain.getLocationAt(i, j);
+                GridLocation currentLocation = terrain.getLocationAt(i, j);
                 if (currentLocation.getHeight() < min.getHeight()) {
                     min = currentLocation;
                 }
@@ -21,13 +21,13 @@ public class TerrainUtilities {
             }
             i++;
         }
-        return new Location[]{min, max};
+        return new GridLocation[]{min, max};
     }
 
     public static String terrainToString(Terrain terrain) {
         StringBuilder terrainBuilder = new StringBuilder();
-        for (Location[] locations : terrain.getLocations()) {
-            for (Location location : locations) {
+        for (GridLocation[] locations : terrain.getLocations()) {
+            for (GridLocation location : locations) {
                 if (location.isFlooded()) {
                     terrainBuilder.append("-");
                 } else {

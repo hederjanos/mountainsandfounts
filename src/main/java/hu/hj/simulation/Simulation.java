@@ -2,7 +2,7 @@ package hu.hj.simulation;
 
 import hu.hj.io.Printer;
 import hu.hj.terrain.Direction;
-import hu.hj.terrain.Location;
+import hu.hj.terrain.GridLocation;
 import hu.hj.terrain.Terrain;
 import hu.hj.terrain.TerrainUtilities;
 
@@ -15,8 +15,8 @@ public abstract class Simulation {
 
     protected final Terrain terrain;
     protected final int size;
-    protected Set<Location> floodedArea;
-    protected Set<Location> neighbourhood;
+    protected Set<GridLocation> floodedArea;
+    protected Set<GridLocation> neighbourhood;
     protected List<Terrain> simulationSteps;
 
     protected Simulation(Terrain terrain) {
@@ -30,15 +30,15 @@ public abstract class Simulation {
     }
 
     protected void initializeSimulation() {
-        Location minLocation = TerrainUtilities.getMinAndMaxLocationOfTerrain(terrain)[0];
+        GridLocation minLocation = TerrainUtilities.getMinAndMaxLocationOfTerrain(terrain)[0];
 
         floodedArea = new HashSet<>();
         minLocation.setFlooded(true);
         floodedArea.add(minLocation);
 
         neighbourhood = new HashSet<>();
-        for (Location location : floodedArea) {
-            Set<Direction> directions = location.getNeighbourDirections();
+        for (GridLocation location : floodedArea) {
+            Set<Direction> directions = location.getNeighbours();
             for (Direction direction : directions) {
                 int x = location.getXCoordinate() + direction.getX();
                 int y = location.getYCoordinate() + direction.getY();
@@ -92,7 +92,7 @@ public abstract class Simulation {
 
     protected boolean isRaised(int minHeightOfNeighbourhood) {
         boolean isRaised = false;
-        for (Location location : floodedArea) {
+        for (GridLocation location : floodedArea) {
             if (location.isFlooded() && location.getHeight() < minHeightOfNeighbourhood) {
                 location.setHeight(location.getHeight() + 1);
                 isRaised = true;
@@ -102,18 +102,18 @@ public abstract class Simulation {
     }
 
     protected void mergeFloodedAreaAndNeighbourhood(int minHeightOfFloodedArea, int minHeightOfNeighbourhood) {
-        Set<Location> addToNeighbourhood = new HashSet<>();
-        Set<Location> addToFloodedArea = new HashSet<>();
-        for (Location location : neighbourhood) {
+        Set<GridLocation> addToNeighbourhood = new HashSet<>();
+        Set<GridLocation> addToFloodedArea = new HashSet<>();
+        for (GridLocation location : neighbourhood) {
             if (!location.isFlooded() && ((location.getHeight() < minHeightOfFloodedArea) ||
                                           (location.getHeight() == minHeightOfFloodedArea && minHeightOfFloodedArea == minHeightOfNeighbourhood))) {
                 location.setFlooded(true);
                 addToFloodedArea.add(location);
-                Set<Direction> directions = location.getNeighbourDirections();
+                Set<Direction> directions = location.getNeighbours();
                 for (Direction direction : directions) {
                     int x = location.getXCoordinate() + direction.getX();
                     int y = location.getYCoordinate() + direction.getY();
-                    Location neighbourLocation = terrain.getLocationAt(x, y);
+                    GridLocation neighbourLocation = terrain.getLocationAt(x, y);
                     if (!neighbourLocation.isFlooded()) {
                         addToNeighbourhood.add(terrain.getLocationAt(x, y));
                     }
@@ -131,9 +131,9 @@ public abstract class Simulation {
         neighbourhood.addAll(addToNeighbourhood);
     }
 
-    protected int getMinHeightOfLocationSet(Set<Location> locations) {
+    protected int getMinHeightOfLocationSet(Set<GridLocation> locations) {
         int minHeight = Integer.MAX_VALUE;
-        for (Location location : locations) {
+        for (GridLocation location : locations) {
             minHeight = Math.min(location.getHeight(), minHeight);
         }
         return minHeight;
@@ -144,7 +144,7 @@ public abstract class Simulation {
         if (floodedArea.size() != Math.pow(terrain.getSize(), 2)) {
             return false;
         }
-        for (Location location : floodedArea) {
+        for (GridLocation location : floodedArea) {
             if (location.getHeight() != terrain.getSize()) {
                 isFlooded = false;
                 break;

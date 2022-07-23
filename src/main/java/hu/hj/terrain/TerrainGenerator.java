@@ -21,20 +21,20 @@ public class TerrainGenerator {
 
     private void generateRandomTerrain() {
         generateHills();
-        Location[] minMax = TerrainUtilities.getMinAndMaxLocationOfTerrain(terrain);
+        GridLocation[] minMax = TerrainUtilities.getMinAndMaxLocationOfTerrain(terrain);
         normalize(minMax[0].getHeight(), minMax[1].getHeight());
     }
 
     private void generateHills() {
-        List<Location> hills = new ArrayList<>();
+        List<GridLocation> hills = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             generateHill(hills);
         }
     }
 
-    private void generateHill(List<Location> hills) {
+    private void generateHill(List<GridLocation> hills) {
         int radius = getRadius();
-        Location hill = generateHill(radius, hills);
+        GridLocation hill = generateHill(radius, hills);
         updateMap(radius, hill);
     }
 
@@ -50,12 +50,12 @@ public class TerrainGenerator {
         return radius;
     }
 
-    private Location generateHill(int radius, List<Location> hills) {
-        Location currentLocation;
+    private GridLocation generateHill(int radius, List<GridLocation> hills) {
+        GridLocation currentLocation;
         do {
             int xCoordinate = RANDOM.nextInt(size + radius) - radius;
             int yCoordinate = RANDOM.nextInt(size + radius) - radius;
-            currentLocation = new Location(xCoordinate, yCoordinate);
+            currentLocation = new GridLocation(xCoordinate, yCoordinate);
             if (hills.isEmpty()) {
                 hills.add(currentLocation);
                 break;
@@ -65,7 +65,7 @@ public class TerrainGenerator {
         return currentLocation;
     }
 
-    private void updateMap(int radius, Location hill) {
+    private void updateMap(int radius, GridLocation hill) {
         int xMin;
         int xMax;
         int yMin;
@@ -90,12 +90,12 @@ public class TerrainGenerator {
         updateHillEnvironment(hill, radius, xMin, xMax, yMin, yMax);
     }
 
-    private void updateHillEnvironment(Location hill, int radius, int xMin, int xMax, int yMin, int yMax) {
+    private void updateHillEnvironment(GridLocation hill, int radius, int xMin, int xMax, int yMin, int yMax) {
         int radiusSquare = radius * radius;
         int height;
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMin; j <= yMax; j++) {
-                Location currentLocation = terrain.getLocationAt(i, j);
+                GridLocation currentLocation = terrain.getLocationAt(i, j);
                 height = radiusSquare - hill.calculateSquareDistance(currentLocation);
                 if (height > 0) {
                     currentLocation.setHeight(currentLocation.getHeight() + height);
@@ -104,9 +104,9 @@ public class TerrainGenerator {
         }
     }
 
-    private int getClosestDistance(List<Location> hills, Location hillCandidate) {
+    private int getClosestDistance(List<GridLocation> hills, GridLocation hillCandidate) {
         int closestDistance = Integer.MAX_VALUE;
-        for (Location hill : hills) {
+        for (GridLocation hill : hills) {
             closestDistance = Math.min(hillCandidate.calculateSquareDistance(hill), closestDistance);
         }
         return closestDistance;
@@ -115,7 +115,7 @@ public class TerrainGenerator {
     private void normalize(int min, int max) {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                Location currentLocation = terrain.getLocationAt(i, j);
+                GridLocation currentLocation = terrain.getLocationAt(i, j);
                 double norm = (double) (currentLocation.getHeight() - min) / (max - min);
                 if (norm < (double) 1 / size) {
                     norm += (double) 1 / size;
