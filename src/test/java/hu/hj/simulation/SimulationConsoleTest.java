@@ -1,7 +1,6 @@
 package hu.hj.simulation;
 
 import hu.hj.terrain.Terrain;
-import hu.hj.terrain.TerrainUtilities;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +19,7 @@ class SimulationConsoleTest {
         String arrayToString = getArrayToString(initArray);
 
         simulationConsole = new SimulationConsole(new Terrain(initArray));
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -36,7 +35,7 @@ class SimulationConsoleTest {
 
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.initializeSimulation();
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.terrain);
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -53,7 +52,7 @@ class SimulationConsoleTest {
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.flood(1);
 
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -70,7 +69,7 @@ class SimulationConsoleTest {
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.flood(2);
 
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -87,7 +86,7 @@ class SimulationConsoleTest {
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.flood(3);
 
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -104,7 +103,7 @@ class SimulationConsoleTest {
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.flood(4);
 
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -121,7 +120,7 @@ class SimulationConsoleTest {
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.flood(5);
 
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -138,7 +137,7 @@ class SimulationConsoleTest {
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.flood(6);
 
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -155,7 +154,7 @@ class SimulationConsoleTest {
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.flood(7);
 
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -172,7 +171,7 @@ class SimulationConsoleTest {
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.flood(8);
 
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -189,7 +188,7 @@ class SimulationConsoleTest {
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.flood(9);
 
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -206,7 +205,7 @@ class SimulationConsoleTest {
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.flood(10);
 
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -223,7 +222,7 @@ class SimulationConsoleTest {
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.flood(11);
 
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -240,7 +239,7 @@ class SimulationConsoleTest {
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.flood(12);
 
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }
@@ -257,7 +256,7 @@ class SimulationConsoleTest {
         SimulationConsole simulationConsole = new SimulationConsole(new Terrain(initArray));
         simulationConsole.flood(13);
 
-        String terrainToString = TerrainUtilities.terrainToString(simulationConsole.getTerrain());
+        String terrainToString = simulationConsole.getTerrain().toString();
 
         assertEquals(arrayToString, terrainToString);
     }

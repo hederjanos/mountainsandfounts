@@ -4,25 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Terrain {
+
     private boolean fourWayDirection;
-    private int width;
-    private int height;
+    private int size;
     private List<GridLocation> locations;
 
     public Terrain() {
     }
 
     public Terrain(int size) {
-        this(size, size, true);
+        this(size, true);
     }
 
     public Terrain(int size, boolean fourWayDirection) {
-        this(size, size, fourWayDirection);
-    }
-
-    public Terrain(int width, int height, boolean fourWayDirection) {
-        this.width = width;
-        this.height = height;
+        this.size = size;
         this.fourWayDirection = fourWayDirection;
         this.locations = new ArrayList<>();
         initialize();
@@ -32,11 +27,11 @@ public class Terrain {
      * For testing purposes with n*n array
      */
     public Terrain(int[][] myArray) {
-        height = myArray.length;
-        width = myArray[0].length;
+        size = myArray.length;
+        this.fourWayDirection = true;
         locations = new ArrayList<>();
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 GridLocation currentLocation = new GridLocation(i, j);
                 currentLocation.setHeight(myArray[i][j]);
                 locations.add(currentLocation);
@@ -51,8 +46,8 @@ public class Terrain {
     }
 
     private void createLocations() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 locations.add(new GridLocation(i, j));
             }
         }
@@ -80,17 +75,17 @@ public class Terrain {
     }
 
     private int getLocationIndexInLocations(int row, int col) {
-        return row * width + col;
+        return row * size + col;
     }
 
     private boolean areIndexesInBounds(int row, int col) {
-        return row < height && row >= 0 && col < width && col >= 0;
+        return row < size && row >= 0 && col < size && col >= 0;
     }
 
     public Terrain copyTerrain() {
         Terrain copyOfTerrain = new Terrain();
-        copyOfTerrain.setWidth(width);
-        copyOfTerrain.setHeight(height);
+        copyOfTerrain.setSize(size);
+        copyOfTerrain.setFourWayDirection(fourWayDirection);
         List<GridLocation> copyOfLocations = new ArrayList<>();
         for (GridLocation location : getLocations()) {
             GridLocation newLocation = new GridLocation(location.getRowIndex(), location.getColumnIndex());
@@ -105,39 +100,61 @@ public class Terrain {
         return copyOfTerrain;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
+    public GridLocation[] getMinAndMaxLocation() {
+        GridLocation min = getLocationAt(0, 0);
+        GridLocation max = min;
+        for (GridLocation location : locations) {
+            if (location.getHeight() < min.getHeight()) {
+                min = location;
+            }
+            if (location.getHeight() > max.getHeight()) {
+                max = location;
+            }
+        }
+        return new GridLocation[]{min, max};
     }
 
     public GridLocation getLocationAt(int row, int col) {
         return locations.get(getLocationIndexInLocations(row, col));
     }
 
+    @Override
+    public String toString() {
+        StringBuilder terrainBuilder = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                GridLocation currentLocation = locations.get(getLocationIndexInLocations(i, j));
+                if (currentLocation.isFlooded()) {
+                    terrainBuilder.append("-");
+                } else {
+                    terrainBuilder.append(" ");
+                }
+                terrainBuilder.append(currentLocation.getHeight()).append("\t");
+            }
+            terrainBuilder.deleteCharAt(terrainBuilder.length() - 1);
+            terrainBuilder.append("\n");
+        }
+        return terrainBuilder.toString();
+    }
+
+    public void setFourWayDirection(boolean fourWayDirection) {
+        this.fourWayDirection = fourWayDirection;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
     public List<GridLocation> getLocations() {
         return locations;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 
     public void setLocations(List<GridLocation> locations) {
         this.locations = locations;
     }
 
-    public boolean isFourWayDirection() {
-        return fourWayDirection;
-    }
-
-    public void setFourWayDirection(boolean fourWayDirection) {
-        this.fourWayDirection = fourWayDirection;
-    }
 }

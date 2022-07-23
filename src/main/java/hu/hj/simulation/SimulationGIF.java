@@ -29,9 +29,9 @@ public class SimulationGIF extends Simulation {
 
     private void initializeColorMaps() {
         int rgbMax = RGB_MAX;
-        int decrement = (int) Math.floor((double) rgbMax / size);
+        int decrement = (int) Math.floor((double) rgbMax / terrain.getSize());
 
-        for (int i = 1; i <= size; i++) {
+        for (int i = 1; i <= terrain.getSize(); i++) {
             colorMapOfTerrain.put(i, new Color(rgbMax, rgbMax, rgbMax));
             rgbMax -= decrement;
         }
@@ -40,9 +40,9 @@ public class SimulationGIF extends Simulation {
         int redComponent = RED;
         int greenComponent = GREEN;
         int blueComponent = rgbMax;
-        int redDecrement = (int) Math.floor((double) redComponent / size);
-        int greenDecrement = (int) Math.floor((double) greenComponent / size);
-        for (int i = 1; i <= size; i++) {
+        int redDecrement = (int) Math.floor((double) redComponent / terrain.getSize());
+        int greenDecrement = (int) Math.floor((double) greenComponent / terrain.getSize());
+        for (int i = 1; i <= terrain.getSize(); i++) {
             colorMapOfFloodedArea.put(i, new Color(redComponent, greenComponent, blueComponent));
             redComponent -= redDecrement;
             greenComponent -= greenDecrement;

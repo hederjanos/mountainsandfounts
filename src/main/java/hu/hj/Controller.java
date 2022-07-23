@@ -11,7 +11,6 @@ import hu.hj.simulation.SimulationConsole;
 import hu.hj.simulation.SimulationGIF;
 import hu.hj.terrain.Terrain;
 import hu.hj.terrain.TerrainGenerator;
-import hu.hj.terrain.TerrainUtilities;
 
 public class Controller {
 
@@ -63,9 +62,9 @@ public class Controller {
                 simulationMenu.askUserToEnterSize();
                 int size = inputManager.setDimension();
                 mainMenu.displayTerrainHeader();
-                Terrain terrain = new TerrainGenerator(size).getTerrain();
+                Terrain terrain = new TerrainGenerator(size).generateTerrain();
                 previousTerrain = terrain.copyTerrain();
-                printer.println(TerrainUtilities.terrainToString(terrain));
+                printer.println(terrain.toString());
                 simulationMenu.displayMenu();
                 setSimulation(terrain);
                 break;
@@ -111,4 +110,5 @@ public class Controller {
         simulationMenu.displayVisualizationDone(simulation);
         mainMenu.displayMenu();
     }
+
 }

@@ -1,10 +1,8 @@
 package hu.hj.simulation;
 
 import hu.hj.io.Printer;
-import hu.hj.terrain.Direction;
 import hu.hj.terrain.GridLocation;
 import hu.hj.terrain.Terrain;
-import hu.hj.terrain.TerrainUtilities;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -14,14 +12,12 @@ import java.util.Set;
 public abstract class Simulation {
 
     protected final Terrain terrain;
-    protected final int size;
     protected Set<GridLocation> floodedArea;
     protected Set<GridLocation> neighbourhood;
     protected List<Terrain> simulationSteps;
 
     protected Simulation(Terrain terrain) {
         this.terrain = terrain;
-        this.size = terrain.getSize();
         this.simulationSteps = new LinkedList<>();
     }
 
@@ -30,7 +26,7 @@ public abstract class Simulation {
     }
 
     protected void initializeSimulation() {
-        GridLocation minLocation = TerrainUtilities.getMinAndMaxLocationOfTerrain(terrain)[0];
+        GridLocation minLocation = terrain.getMinAndMaxLocation()[0];
 
         floodedArea = new HashSet<>();
         minLocation.setFlooded(true);
@@ -38,11 +34,10 @@ public abstract class Simulation {
 
         neighbourhood = new HashSet<>();
         for (GridLocation location : floodedArea) {
-            Set<Direction> directions = location.getNeighbours();
-            for (Direction direction : directions) {
-                int x = location.getXCoordinate() + direction.getX();
-                int y = location.getYCoordinate() + direction.getY();
-                neighbourhood.add(terrain.getLocationAt(x, y));
+            for (GridLocation neighbour : location.getNeighbours()) {
+                if (neighbour != null) {
+                    neighbourhood.add(neighbour);
+                }
             }
         }
     }
@@ -106,16 +101,13 @@ public abstract class Simulation {
         Set<GridLocation> addToFloodedArea = new HashSet<>();
         for (GridLocation location : neighbourhood) {
             if (!location.isFlooded() && ((location.getHeight() < minHeightOfFloodedArea) ||
-                                          (location.getHeight() == minHeightOfFloodedArea && minHeightOfFloodedArea == minHeightOfNeighbourhood))) {
+                    (location.getHeight() == minHeightOfFloodedArea && minHeightOfFloodedArea == minHeightOfNeighbourhood))) {
                 location.setFlooded(true);
                 addToFloodedArea.add(location);
-                Set<Direction> directions = location.getNeighbours();
-                for (Direction direction : directions) {
-                    int x = location.getXCoordinate() + direction.getX();
-                    int y = location.getYCoordinate() + direction.getY();
-                    GridLocation neighbourLocation = terrain.getLocationAt(x, y);
-                    if (!neighbourLocation.isFlooded()) {
-                        addToNeighbourhood.add(terrain.getLocationAt(x, y));
+                GridLocation[] neighbours = location.getNeighbours();
+                for (GridLocation neighbourLocation : neighbours) {
+                    if (neighbourLocation != null && !neighbourLocation.isFlooded()) {
+                        addToNeighbourhood.add(neighbourLocation);
                     }
                 }
             }

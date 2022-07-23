@@ -29,4 +29,5 @@ public enum Direction {
     public Direction getOppositeDirection() {
         return values()[(this.ordinal() + 4) % 8];
     }
+
 }
