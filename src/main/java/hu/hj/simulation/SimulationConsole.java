@@ -15,4 +15,5 @@ public class SimulationConsole extends Simulation {
             printer.println(simulationStep.toString());
         }
     }
+
 }

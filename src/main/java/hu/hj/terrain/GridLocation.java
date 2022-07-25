@@ -23,7 +23,7 @@ public class GridLocation {
         setNeighbours(gridLocation.getNeighbours());
     }
 
-    public GridLocation copy() {
+    protected GridLocation copy() {
         return new GridLocation(this);
     }
 
@@ -55,7 +55,7 @@ public class GridLocation {
                 "row=" + rowIndex +
                 ", col=" + columnIndex +
                 ", height=" + height +
-                ", flooded" + isFlooded +
+                ", flooded=" + isFlooded +
                 "}";
     }
 

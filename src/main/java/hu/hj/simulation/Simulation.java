@@ -151,4 +151,5 @@ public abstract class Simulation {
     }
 
     public abstract void visualize(Printer printer);
+
 }
