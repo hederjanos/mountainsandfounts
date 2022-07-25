@@ -100,15 +100,15 @@ public class Terrain {
         return copyOfTerrain;
     }
 
-    public GridLocation[] getMinAndMaxLocation() {
-        GridLocation min = getLocationAt(0, 0);
-        GridLocation max = min;
+    public GridLocation[] getMinAndMaxHeightLocation() {
+        GridLocation min = getLocationAt(0, 0).copy();
+        GridLocation max = getLocationAt(0, 0).copy();
         for (GridLocation location : locations) {
             if (location.getHeight() < min.getHeight()) {
-                min = location;
+                min = location.copy();
             }
             if (location.getHeight() > max.getHeight()) {
-                max = location;
+                max = location.copy();
             }
         }
         return new GridLocation[]{min, max};

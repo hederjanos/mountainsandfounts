@@ -18,7 +18,7 @@ public class TerrainGenerator {
     public Terrain generateTerrain() {
         Terrain terrain = new Terrain(size);
         generateHills(terrain);
-        GridLocation[] minMax = terrain.getMinAndMaxLocation();
+        GridLocation[] minMax = terrain.getMinAndMaxHeightLocation();
         normalize(terrain, minMax);
         return terrain;
     }
@@ -110,15 +110,12 @@ public class TerrainGenerator {
     }
 
     private void normalize(Terrain terrain, GridLocation[] minMax) {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                GridLocation currentLocation = terrain.getLocationAt(i, j);
-                double norm = (double) (currentLocation.getHeight() - minMax[0].getHeight()) / (minMax[1].getHeight() - minMax[0].getHeight());
-                if (norm < (double) 1 / size) {
-                    norm += (double) 1 / size;
-                }
-                currentLocation.setHeight((int) (norm * size));
+        for (GridLocation location : terrain.getLocations()) {
+            double norm = (double) (location.getHeight() - minMax[0].getHeight()) / (minMax[1].getHeight() - minMax[0].getHeight());
+            if (norm < (double) 1 / size) {
+                norm += (double) 1 / size;
             }
+            location.setHeight((int) (norm * size));
         }
     }
 

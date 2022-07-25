@@ -26,11 +26,12 @@ public abstract class Simulation {
     }
 
     protected void initializeSimulation() {
-        GridLocation minLocation = terrain.getMinAndMaxLocation()[0];
+        GridLocation minLocation = terrain.getMinAndMaxHeightLocation()[0];
+        GridLocation burstLocation = terrain.getLocationAt(minLocation.getRowIndex(), minLocation.getColumnIndex());
 
         floodedArea = new HashSet<>();
-        minLocation.setFlooded(true);
-        floodedArea.add(minLocation);
+        burstLocation.setFlooded(true);
+        floodedArea.add(burstLocation);
 
         neighbourhood = new HashSet<>();
         for (GridLocation location : floodedArea) {
