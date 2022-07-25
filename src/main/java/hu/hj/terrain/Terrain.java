@@ -90,7 +90,7 @@ public class Terrain {
         for (GridLocation location : getLocations()) {
             GridLocation newLocation = new GridLocation(location.getRowIndex(), location.getColumnIndex());
             newLocation.setHeight(location.getHeight());
-Mino            newLocation.setFlooded(location.isFlooded());
+            newLocation.setFlooded(location.isFlooded());
             copyOfLocations.add(newLocation);
         }
         copyOfTerrain.setLocations(copyOfLocations);
