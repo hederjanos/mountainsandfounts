@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Frame {
-    private static final int PIXELS_SQUARE = 50;
+    private static final int PIXELS_SQUARE = 60;
     private final Graphics2D graphics;
     private final BufferedImage image;
 
