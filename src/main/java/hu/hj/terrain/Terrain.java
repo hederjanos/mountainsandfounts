@@ -19,8 +19,7 @@ public class Terrain {
     public Terrain(int size, boolean fourWayDirection) {
         this.size = size;
         this.fourWayDirection = fourWayDirection;
-        this.cells = new ArrayList<>();
-        initialize();
+        initializeCells();
     }
 
     /**
@@ -40,11 +39,8 @@ public class Terrain {
         }
     }
 
-    private void initialize() {
-        createCells();
-    }
-
-    private void createCells() {
+    private void initializeCells() {
+        this.cells = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 GridCell cell = new GridCell(j, i);
