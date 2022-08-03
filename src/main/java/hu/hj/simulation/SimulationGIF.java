@@ -69,7 +69,7 @@ public class SimulationGIF extends Simulation {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 Color color;
-                GridCell cell = terrain.getCellAt(i, j);
+                GridCell cell = terrain.getCellAt(j, i);
                 if (cell.isFlooded()) {
                     color = colorMapOfFloodedArea.get(cell.getHeight());
                 } else {

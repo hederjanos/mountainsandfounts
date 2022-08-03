@@ -9,8 +9,8 @@ public class GridCell {
     private boolean isFlooded;
     private GridCell[] neighbours;
 
-    public GridCell(int row, int col) {
-        this.position = new GridPosition(row, col);
+    public GridCell(int x, int y) {
+        this.position = new GridPosition(x, y);
         this.neighbours = new GridCell[Direction.values().length];
     }
 

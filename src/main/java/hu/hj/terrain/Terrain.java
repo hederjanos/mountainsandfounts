@@ -32,7 +32,7 @@ public class Terrain {
         cells = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                GridCell currentCell = new GridCell(i, j);
+                GridCell currentCell = new GridCell(j, i);
                 currentCell.setHeight(myArray[i][j]);
                 setNeighbours(currentCell);
                 cells.add(currentCell);
@@ -47,7 +47,7 @@ public class Terrain {
     private void createCells() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                GridCell cell = new GridCell(i, j);
+                GridCell cell = new GridCell(j, i);
                 setNeighbours(cell);
                 cells.add(cell);
             }
@@ -59,10 +59,10 @@ public class Terrain {
             if (fourWayDirection && direction.ordinal() % 2 != 0) {
                 continue;
             }
-            int newRow = cell.getPosition().getRowIndex() + direction.getX();
-            int newCol = cell.getPosition().getColumnIndex() + direction.getY();
-            if (areIndexesInBounds(newRow, newCol)) {
-                int indexOfNeighbourCell = getCellIndexInCells(newRow, newCol);
+            int newX = cell.getPosition().getX() + direction.getX();
+            int newY = cell.getPosition().getY() + direction.getY();
+            if (areCoordinatesInBounds(newX, newY)) {
+                int indexOfNeighbourCell = getCellIndexInCells(newX, newY);
                 GridCell neighbourCell = findCellByIndex(indexOfNeighbourCell);
                 if (neighbourCell != null) {
                     cell.setNeighbour(neighbourCell, direction);
@@ -72,8 +72,8 @@ public class Terrain {
         }
     }
 
-    private int getCellIndexInCells(int row, int col) {
-        return row * size + col;
+    private int getCellIndexInCells(int x, int y) {
+        return x + y * size;
     }
 
     private GridCell findCellByIndex(int indexOfNeighbourCell) {
@@ -86,8 +86,8 @@ public class Terrain {
         return cell;
     }
 
-    private boolean areIndexesInBounds(int row, int col) {
-        return row < size && row >= 0 && col < size && col >= 0;
+    private boolean areCoordinatesInBounds(int x, int y) {
+        return x < size && x >= 0 && y < size && y >= 0;
     }
 
     public Terrain copyTerrain() {
@@ -127,7 +127,7 @@ public class Terrain {
         StringBuilder terrainBuilder = new StringBuilder();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                GridCell currentCell = findCellByIndex(getCellIndexInCells(i, j));
+                GridCell currentCell = findCellByIndex(getCellIndexInCells(j, i));
                 if (currentCell != null) {
                     if (currentCell.isFlooded()) {
                         terrainBuilder.append("-");

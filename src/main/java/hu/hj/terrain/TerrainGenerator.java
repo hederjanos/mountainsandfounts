@@ -50,9 +50,9 @@ public class TerrainGenerator {
     private GridCell generateHill(int radius, List<GridCell> hills) {
         GridCell currentCell;
         do {
-            int rowIndex = RANDOM.nextInt(size + radius) - radius;
-            int columnIndex = RANDOM.nextInt(size + radius) - radius;
-            currentCell = new GridCell(rowIndex, columnIndex);
+            int x = RANDOM.nextInt(size + radius) - radius;
+            int y = RANDOM.nextInt(size + radius) - radius;
+            currentCell = new GridCell(x, y);
             if (hills.isEmpty()) {
                 hills.add(currentCell);
                 break;
@@ -63,28 +63,28 @@ public class TerrainGenerator {
     }
 
     private void updateTerrain(Terrain terrain, GridCell hill) {
-        int rowMin;
-        int rowMax;
-        int colMin;
-        int colMax;
+        int xMin;
+        int xMax;
+        int yMin;
+        int yMax;
 
-        rowMin = Math.max(hill.getPosition().getRowIndex() - radius - 1, 0);
+        xMin = Math.max(hill.getPosition().getX() - radius - 1, 0);
 
-        if (hill.getPosition().getRowIndex() + radius + 1 >= size) {
-            rowMax = size - 1;
+        if (hill.getPosition().getX() + radius + 1 >= size) {
+            xMax = size - 1;
         } else {
-            rowMax = hill.getPosition().getRowIndex() + radius + 1;
+            xMax = hill.getPosition().getX() + radius + 1;
         }
 
-        colMin = Math.max(hill.getPosition().getColumnIndex() - radius - 1, 0);
+        yMin = Math.max(hill.getPosition().getY() - radius - 1, 0);
 
-        if (hill.getPosition().getColumnIndex() + radius + 1 >= size) {
-            colMax = size - 1;
+        if (hill.getPosition().getY() + radius + 1 >= size) {
+            yMax = size - 1;
         } else {
-            colMax = hill.getPosition().getColumnIndex() + radius + 1;
+            yMax = hill.getPosition().getY() + radius + 1;
         }
 
-        updateHillEnvironment(terrain, hill, new int[]{rowMin, rowMax, colMin, colMax});
+        updateHillEnvironment(terrain, hill, new int[]{xMin, xMax, yMin, yMax});
     }
 
     private void updateHillEnvironment(Terrain terrain, GridCell hill, int[] bounds) {

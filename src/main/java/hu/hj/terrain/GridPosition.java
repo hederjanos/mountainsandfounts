@@ -4,17 +4,17 @@ import java.util.Objects;
 
 public class GridPosition {
 
-    private int rowIndex;
-    private int columnIndex;
+    private int x;
+    private int y;
 
-    public GridPosition(int row, int col) {
-        this.rowIndex = row;
-        this.columnIndex = col;
+    public GridPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     public GridPosition(GridPosition position) {
-        setRowIndex(position.getRowIndex());
-        setColumnIndex(position.getColumnIndex());
+        setX(position.getX());
+        setY(position.getY());
     }
 
     public GridPosition copy() {
@@ -22,8 +22,8 @@ public class GridPosition {
     }
 
     public int calculateSquareDistance(GridPosition position) {
-        return (rowIndex - position.getRowIndex()) * (rowIndex - position.getRowIndex()) +
-                (columnIndex - position.getColumnIndex()) * (columnIndex - position.getColumnIndex());
+        return (x - position.getX()) * (x - position.getX()) +
+                (y - position.getY()) * (y - position.getY());
     }
 
     @Override
@@ -31,36 +31,36 @@ public class GridPosition {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GridPosition that = (GridPosition) o;
-        return rowIndex == that.rowIndex && columnIndex == that.columnIndex;
+        return x == that.x && y == that.y;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rowIndex, columnIndex);
+        return Objects.hash(x, y);
     }
 
     @Override
     public String toString() {
         return "GridPosition{" +
-                "row=" + rowIndex +
-                ", col=" + columnIndex +
+                "x=" + x +
+                ", y=" + y +
                 "}";
     }
 
-    public int getRowIndex() {
-        return rowIndex;
+    public int getX() {
+        return x;
     }
 
-    public void setRowIndex(int row) {
-        this.rowIndex = row;
+    public void setX(int row) {
+        this.x = row;
     }
 
-    public int getColumnIndex() {
-        return columnIndex;
+    public int getY() {
+        return y;
     }
 
-    public void setColumnIndex(int col) {
-        this.columnIndex = col;
+    public void setY(int col) {
+        this.y = col;
     }
 
 }
