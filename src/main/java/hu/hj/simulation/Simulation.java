@@ -27,7 +27,7 @@ public abstract class Simulation {
 
     protected void initializeSimulation() {
         GridCell minCell = terrain.getMinAndMaxHeightCell()[0];
-        GridCell burstCell = terrain.getCellAt(minCell.getPosition().getX(), minCell.getPosition().getY());
+        GridCell burstCell = terrain.getCellAt(minCell.getX(), minCell.getY());
 
         floodedArea = new HashSet<>();
         burstCell.setFlooded(true);

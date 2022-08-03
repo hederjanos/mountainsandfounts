@@ -59,8 +59,8 @@ public class Terrain {
             if (fourWayDirection && direction.ordinal() % 2 != 0) {
                 continue;
             }
-            int newX = cell.getPosition().getX() + direction.getX();
-            int newY = cell.getPosition().getY() + direction.getY();
+            int newX = cell.getX() + direction.getX();
+            int newY = cell.getY() + direction.getY();
             if (areCoordinatesInBounds(newX, newY)) {
                 int indexOfNeighbourCell = getCellIndexInCells(newX, newY);
                 GridCell neighbourCell = findCellByIndex(indexOfNeighbourCell);
@@ -118,8 +118,8 @@ public class Terrain {
         return new GridCell[]{min, max};
     }
 
-    public GridCell getCellAt(int row, int col) {
-        return cells.get(getCellIndexInCells(row, col));
+    public GridCell getCellAt(int x, int y) {
+        return cells.get(getCellIndexInCells(x, y));
     }
 
     @Override

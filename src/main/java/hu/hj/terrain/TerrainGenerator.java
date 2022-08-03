@@ -68,20 +68,20 @@ public class TerrainGenerator {
         int yMin;
         int yMax;
 
-        xMin = Math.max(hill.getPosition().getX() - radius - 1, 0);
+        xMin = Math.max(hill.getX() - radius - 1, 0);
 
-        if (hill.getPosition().getX() + radius + 1 >= size) {
+        if (hill.getX() + radius + 1 >= size) {
             xMax = size - 1;
         } else {
-            xMax = hill.getPosition().getX() + radius + 1;
+            xMax = hill.getX() + radius + 1;
         }
 
-        yMin = Math.max(hill.getPosition().getY() - radius - 1, 0);
+        yMin = Math.max(hill.getY() - radius - 1, 0);
 
-        if (hill.getPosition().getY() + radius + 1 >= size) {
+        if (hill.getY() + radius + 1 >= size) {
             yMax = size - 1;
         } else {
-            yMax = hill.getPosition().getY() + radius + 1;
+            yMax = hill.getY() + radius + 1;
         }
 
         updateHillEnvironment(terrain, hill, new int[]{xMin, xMax, yMin, yMax});
@@ -93,7 +93,7 @@ public class TerrainGenerator {
         for (int i = bounds[0]; i <= bounds[1]; i++) {
             for (int j = bounds[2]; j <= bounds[3]; j++) {
                 GridCell currentCell = terrain.getCellAt(i, j);
-                height = radiusSquare - hill.getPosition().calculateSquareDistance(currentCell.getPosition());
+                height = radiusSquare - hill.calculateSquareDistance(currentCell);
                 if (height > 0) {
                     currentCell.setHeight(currentCell.getHeight() + height);
                 }
@@ -104,7 +104,7 @@ public class TerrainGenerator {
     private int getClosestDistance(List<GridCell> hills, GridCell hillCandidate) {
         int closestDistance = Integer.MAX_VALUE;
         for (GridCell hill : hills) {
-            closestDistance = Math.min(hillCandidate.getPosition().calculateSquareDistance(hill.getPosition()), closestDistance);
+            closestDistance = Math.min(hillCandidate.calculateSquareDistance(hill), closestDistance);
         }
         return closestDistance;
     }

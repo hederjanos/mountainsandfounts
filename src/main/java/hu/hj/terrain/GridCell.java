@@ -4,13 +4,15 @@ import java.util.Objects;
 
 public class GridCell {
 
-    private GridPosition position;
+    private int x;
+    private int y;
     private int height;
     private boolean isFlooded;
     private GridCell[] neighbours;
 
     public GridCell(int x, int y) {
-        this.position = new GridPosition(x, y);
+        this.x = x;
+        this.y = y;
         this.neighbours = new GridCell[Direction.values().length];
     }
 
@@ -24,9 +26,15 @@ public class GridCell {
     }
 
     private void setAttributes(GridCell cell) {
-        setPosition(cell.getPosition().copy());
+        setX(cell.getX());
+        setY(cell.getY());
         setHeight(cell.getHeight());
         setFlooded(cell.isFlooded());
+    }
+
+    public int calculateSquareDistance(GridCell cell) {
+        return (x - cell.getX()) * (x - cell.getX()) +
+                (y - cell.getY()) * (y - cell.getY());
     }
 
     protected GridCell copy(boolean withNeighbours) {
@@ -42,29 +50,38 @@ public class GridCell {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GridCell cell = (GridCell) o;
-        return cell.getPosition().equals(((GridCell) o).getPosition());
+        return x == cell.x && y == cell.y;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(position);
+        return Objects.hash(x, y);
     }
 
     @Override
     public String toString() {
         return "GridCell{" +
-                "position=" + position +
+                "x=" + x +
+                ", y=" + y +
                 ", height=" + height +
                 ", isFlooded=" + isFlooded +
                 '}';
     }
 
-    public GridPosition getPosition() {
-        return position;
+    public int getX() {
+        return x;
     }
 
-    public void setPosition(GridPosition position) {
-        this.position = position;
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
     public int getHeight() {
