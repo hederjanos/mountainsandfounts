@@ -15,21 +15,18 @@ public class SimulationMenu extends Menu {
         printer.println("SIMULATION MENU");
         printer.println("Press");
         printer.println(
-                """
-                        0 - to quit to Main Menu
-                        1 - to simulate on console
-                        2 - to create an animated GIF
-                        3 - to display Simulation Menu""");
+                        "0 - to quit to Main Menu\n" +
+                        "1 - to simulate on console\n" +
+                        "2 - to create an animated GIF\n" +
+                        "3 - to display Simulation Menu\n");
         printer.println(SEPARATOR);
     }
 
     public void displayVisualizationInfo() {
-        printer.println("""
-                              
-                The creation of an animated gif is a heap space killer process.
-                To avoid OutOfMemoryError the upper border of dimension is limited to 40.
-                The lower limit is 4.
-                """);
+        printer.println(
+                        "The creation of an animated gif is a heap space killer process.\n" +
+                        "To avoid OutOfMemoryError the upper border of dimension is limited to 40.\n" +
+                        "The lower limit is 4.\n");
     }
 
     public void askUserToEnterSize() {

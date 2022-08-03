@@ -1,7 +1,7 @@
 package hu.hj.simulation;
 
 import hu.hj.io.Printer;
-import hu.hj.terrain.GridLocation;
+import hu.hj.terrain.GridCell;
 import hu.hj.terrain.Terrain;
 
 import java.util.HashSet;
@@ -12,8 +12,8 @@ import java.util.Set;
 public abstract class Simulation {
 
     protected final Terrain terrain;
-    protected Set<GridLocation> floodedArea;
-    protected Set<GridLocation> neighbourhood;
+    protected Set<GridCell> floodedArea;
+    protected Set<GridCell> neighbourhood;
     protected List<Terrain> simulationSteps;
 
     protected Simulation(Terrain terrain) {
@@ -26,18 +26,18 @@ public abstract class Simulation {
     }
 
     protected void initializeSimulation() {
-        GridLocation minLocation = terrain.getMinAndMaxHeightLocation()[0];
-        GridLocation burstLocation = terrain.getLocationAt(minLocation.getRowIndex(), minLocation.getColumnIndex());
+        GridCell minCell = terrain.getMinAndMaxHeightCell()[0];
+        GridCell burstCell = terrain.getCellAt(minCell.getPosition().getRowIndex(), minCell.getPosition().getColumnIndex());
 
         floodedArea = new HashSet<>();
-        burstLocation.setFlooded(true);
-        floodedArea.add(burstLocation);
+        burstCell.setFlooded(true);
+        floodedArea.add(burstCell);
 
         neighbourhood = new HashSet<>();
-        for (GridLocation location : floodedArea) {
-            for (GridLocation neighbour : location.getNeighbours()) {
-                if (neighbour != null) {
-                    neighbourhood.add(neighbour);
+        for (GridCell cell : floodedArea) {
+            for (GridCell neighbourCell : cell.getNeighbours()) {
+                if (neighbourCell != null) {
+                    neighbourhood.add(neighbourCell);
                 }
             }
         }
@@ -47,16 +47,16 @@ public abstract class Simulation {
         simulationSteps.add(terrain.copyTerrain());
         initializeSimulation();
         simulationSteps.add(terrain.copyTerrain());
-        int minHeightOfFloodedArea = getMinHeightOfLocationSet(floodedArea);
-        int minHeightOfNeighbourhood = getMinHeightOfLocationSet(neighbourhood);
+        int minHeightOfFloodedArea = getMinHeightOfCellSet(floodedArea);
+        int minHeightOfNeighbourhood = getMinHeightOfCellSet(neighbourhood);
 
         while (!isTerrainFullyFlooded()) {
             if (isRaised(minHeightOfNeighbourhood)) {
-                minHeightOfFloodedArea = getMinHeightOfLocationSet(floodedArea);
+                minHeightOfFloodedArea = getMinHeightOfCellSet(floodedArea);
                 simulationSteps.add(terrain.copyTerrain());
             }
             mergeFloodedAreaAndNeighbourhood(minHeightOfFloodedArea, minHeightOfNeighbourhood);
-            minHeightOfNeighbourhood = getMinHeightOfLocationSet(neighbourhood);
+            minHeightOfNeighbourhood = getMinHeightOfCellSet(neighbourhood);
             simulationSteps.add(terrain.copyTerrain());
         }
     }
@@ -66,19 +66,19 @@ public abstract class Simulation {
      */
     public void flood(int numberOfSimulations) {
         initializeSimulation();
-        int minHeightOfFloodedArea = getMinHeightOfLocationSet(floodedArea);
-        int minHeightOfNeighbourhood = getMinHeightOfLocationSet(neighbourhood);
+        int minHeightOfFloodedArea = getMinHeightOfCellSet(floodedArea);
+        int minHeightOfNeighbourhood = getMinHeightOfCellSet(neighbourhood);
         int counter = 0;
         while (true) {
             if (isRaised(minHeightOfNeighbourhood)) {
-                minHeightOfFloodedArea = getMinHeightOfLocationSet(floodedArea);
+                minHeightOfFloodedArea = getMinHeightOfCellSet(floodedArea);
                 counter++;
                 if (counter == numberOfSimulations) {
                     break;
                 }
             }
             mergeFloodedAreaAndNeighbourhood(minHeightOfFloodedArea, minHeightOfNeighbourhood);
-            minHeightOfNeighbourhood = getMinHeightOfLocationSet(neighbourhood);
+            minHeightOfNeighbourhood = getMinHeightOfCellSet(neighbourhood);
             counter++;
             if (counter == numberOfSimulations) {
                 break;
@@ -88,9 +88,9 @@ public abstract class Simulation {
 
     protected boolean isRaised(int minHeightOfNeighbourhood) {
         boolean isRaised = false;
-        for (GridLocation location : floodedArea) {
-            if (location.isFlooded() && location.getHeight() < minHeightOfNeighbourhood) {
-                location.setHeight(location.getHeight() + 1);
+        for (GridCell cell : floodedArea) {
+            if (cell.isFlooded() && cell.getHeight() < minHeightOfNeighbourhood) {
+                cell.setHeight(cell.getHeight() + 1);
                 isRaised = true;
             }
         }
@@ -98,24 +98,23 @@ public abstract class Simulation {
     }
 
     protected void mergeFloodedAreaAndNeighbourhood(int minHeightOfFloodedArea, int minHeightOfNeighbourhood) {
-        Set<GridLocation> addToNeighbourhood = new HashSet<>();
-        Set<GridLocation> addToFloodedArea = new HashSet<>();
-        for (GridLocation location : neighbourhood) {
-            if (!location.isFlooded() && ((location.getHeight() < minHeightOfFloodedArea) ||
-                    (location.getHeight() == minHeightOfFloodedArea && minHeightOfFloodedArea == minHeightOfNeighbourhood))) {
-                location.setFlooded(true);
-                addToFloodedArea.add(location);
-                GridLocation[] neighbours = location.getNeighbours();
-                for (GridLocation neighbourLocation : neighbours) {
-                    if (neighbourLocation != null && !neighbourLocation.isFlooded()) {
-                        addToNeighbourhood.add(neighbourLocation);
+        Set<GridCell> addToNeighbourhood = new HashSet<>();
+        Set<GridCell> addToFloodedArea = new HashSet<>();
+        for (GridCell cell : neighbourhood) {
+            if (!cell.isFlooded() && ((cell.getHeight() < minHeightOfFloodedArea) ||
+                    (cell.getHeight() == minHeightOfFloodedArea && minHeightOfFloodedArea == minHeightOfNeighbourhood))) {
+                cell.setFlooded(true);
+                addToFloodedArea.add(cell);
+                for (GridCell neighbourCell : cell.getNeighbours()) {
+                    if (neighbourCell != null && !neighbourCell.isFlooded()) {
+                        addToNeighbourhood.add(neighbourCell);
                     }
                 }
             }
         }
         floodedArea.addAll(addToFloodedArea);
         neighbourhood.removeAll(addToFloodedArea);
-        // if a recently flooded Location has any non-flooded neighbours which currently floodable, that neighbour
+        // if a recently flooded Cell has any non-flooded neighbours which currently floodable, that neighbour
         // is added to addToFloodedArea and addToNeighbourhood too, the intersection must be removed from
         // addToNeighbourhood before add it to neighbourhood
         addToFloodedArea.retainAll(addToNeighbourhood);
@@ -124,10 +123,10 @@ public abstract class Simulation {
         neighbourhood.addAll(addToNeighbourhood);
     }
 
-    protected int getMinHeightOfLocationSet(Set<GridLocation> locations) {
+    protected int getMinHeightOfCellSet(Set<GridCell> cells) {
         int minHeight = Integer.MAX_VALUE;
-        for (GridLocation location : locations) {
-            minHeight = Math.min(location.getHeight(), minHeight);
+        for (GridCell cell : cells) {
+            minHeight = Math.min(cell.getHeight(), minHeight);
         }
         return minHeight;
     }
@@ -137,8 +136,8 @@ public abstract class Simulation {
         if (floodedArea.size() != Math.pow(terrain.getSize(), 2)) {
             return false;
         }
-        for (GridLocation location : floodedArea) {
-            if (location.getHeight() != terrain.getSize()) {
+        for (GridCell cell : floodedArea) {
+            if (cell.getHeight() != terrain.getSize()) {
                 isFlooded = false;
                 break;
             }

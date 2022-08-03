@@ -13,11 +13,10 @@ public class MainMenu extends Menu {
         printer.println("MAIN MENU");
         printer.println("Press");
         printer.println(
-                """
-                        0 - to quit
-                        1 - to initialize a new terrain
-                        2 - rerun a simulation
-                        3 - to display Main Menu""");
+                        "0 - to quit\n" +
+                        "1 - to initialize a new terrain\n" +
+                        "2 - rerun a simulation\n" +
+                        "3 - to display Main Menu\n");
         printer.println(SEPARATOR);
     }
 

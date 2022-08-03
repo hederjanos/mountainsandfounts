@@ -7,7 +7,7 @@ public class Terrain {
 
     private boolean fourWayDirection;
     private int size;
-    private List<GridLocation> locations;
+    private List<GridCell> cells;
 
     public Terrain() {
     }
@@ -19,7 +19,7 @@ public class Terrain {
     public Terrain(int size, boolean fourWayDirection) {
         this.size = size;
         this.fourWayDirection = fourWayDirection;
-        this.locations = new ArrayList<>();
+        this.cells = new ArrayList<>();
         initialize();
     }
 
@@ -29,53 +29,61 @@ public class Terrain {
     public Terrain(int[][] myArray) {
         size = myArray.length;
         this.fourWayDirection = true;
-        locations = new ArrayList<>();
+        cells = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                GridLocation currentLocation = new GridLocation(i, j);
-                currentLocation.setHeight(myArray[i][j]);
-                locations.add(currentLocation);
+                GridCell currentCell = new GridCell(i, j);
+                currentCell.setHeight(myArray[i][j]);
+                setNeighbours(currentCell);
+                cells.add(currentCell);
             }
         }
-        connectLocations();
     }
 
     private void initialize() {
-        createLocations();
-        connectLocations();
+        createCells();
     }
 
-    private void createLocations() {
+    private void createCells() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                locations.add(new GridLocation(i, j));
+                GridCell cell = new GridCell(i, j);
+                setNeighbours(cell);
+                cells.add(cell);
             }
         }
     }
 
-    private void connectLocations() {
-        for (GridLocation location : locations) {
-            setNeighbours(location);
-        }
-    }
-
-    private void setNeighbours(GridLocation location) {
+    private void setNeighbours(GridCell cell) {
         for (Direction direction : Direction.values()) {
             if (fourWayDirection && direction.ordinal() % 2 != 0) {
                 continue;
             }
-            int newRowIndex = location.getRowIndex() + direction.getX();
-            int newColumnIndex = location.getColumnIndex() + direction.getY();
-            if (areIndexesInBounds(newRowIndex, newColumnIndex)) {
-                int indexOfNeighbourLocation = getLocationIndexInLocations(newRowIndex, newColumnIndex);
-                GridLocation neighbourLocation = locations.get(indexOfNeighbourLocation);
-                location.setNeighbour(neighbourLocation, direction);
+            int newRow = cell.getPosition().getRowIndex() + direction.getX();
+            int newCol = cell.getPosition().getColumnIndex() + direction.getY();
+            if (areIndexesInBounds(newRow, newCol)) {
+                int indexOfNeighbourCell = getCellIndexInCells(newRow, newCol);
+                GridCell neighbourCell = findCellByIndex(indexOfNeighbourCell);
+                if (neighbourCell != null) {
+                    cell.setNeighbour(neighbourCell, direction);
+                    neighbourCell.setNeighbour(cell, direction.getOppositeDirection());
+                }
             }
         }
     }
 
-    private int getLocationIndexInLocations(int row, int col) {
+    private int getCellIndexInCells(int row, int col) {
         return row * size + col;
+    }
+
+    private GridCell findCellByIndex(int indexOfNeighbourCell) {
+        GridCell cell;
+        try {
+            cell = cells.get(indexOfNeighbourCell);
+        } catch (IndexOutOfBoundsException exception) {
+            cell = null;
+        }
+        return cell;
     }
 
     private boolean areIndexesInBounds(int row, int col) {
@@ -86,34 +94,32 @@ public class Terrain {
         Terrain copyOfTerrain = new Terrain();
         copyOfTerrain.setSize(size);
         copyOfTerrain.setFourWayDirection(fourWayDirection);
-        List<GridLocation> copyOfLocations = new ArrayList<>();
-        for (GridLocation location : getLocations()) {
-            GridLocation newLocation = new GridLocation(location.getRowIndex(), location.getColumnIndex());
-            newLocation.setHeight(location.getHeight());
-            newLocation.setFlooded(location.isFlooded());
-            copyOfLocations.add(newLocation);
+        List<GridCell> copyOfCells = new ArrayList<>();
+        copyOfTerrain.setCells(copyOfCells);
+        for (GridCell cell : cells) {
+            GridCell newCell = cell.copy(false);
+            copyOfCells.add(newCell);
+            copyOfTerrain.setNeighbours(newCell);
         }
-        copyOfTerrain.setLocations(copyOfLocations);
-        copyOfTerrain.connectLocations();
         return copyOfTerrain;
     }
 
-    public GridLocation[] getMinAndMaxHeightLocation() {
-        GridLocation min = getLocationAt(0, 0).copy();
-        GridLocation max = getLocationAt(0, 0).copy();
-        for (GridLocation location : locations) {
-            if (location.getHeight() < min.getHeight()) {
-                min = location.copy();
+    public GridCell[] getMinAndMaxHeightCell() {
+        GridCell min = getCellAt(0, 0).copy(false);
+        GridCell max = getCellAt(0, 0).copy(false);
+        for (GridCell cell : cells) {
+            if (cell.getHeight() < min.getHeight()) {
+                min = cell.copy(false);
             }
-            if (location.getHeight() > max.getHeight()) {
-                max = location.copy();
+            if (cell.getHeight() > max.getHeight()) {
+                max = cell.copy(false);
             }
         }
-        return new GridLocation[]{min, max};
+        return new GridCell[]{min, max};
     }
 
-    public GridLocation getLocationAt(int row, int col) {
-        return locations.get(getLocationIndexInLocations(row, col));
+    public GridCell getCellAt(int row, int col) {
+        return cells.get(getCellIndexInCells(row, col));
     }
 
     @Override
@@ -121,13 +127,15 @@ public class Terrain {
         StringBuilder terrainBuilder = new StringBuilder();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                GridLocation currentLocation = locations.get(getLocationIndexInLocations(i, j));
-                if (currentLocation.isFlooded()) {
-                    terrainBuilder.append("-");
-                } else {
-                    terrainBuilder.append(" ");
+                GridCell currentCell = findCellByIndex(getCellIndexInCells(i, j));
+                if (currentCell != null) {
+                    if (currentCell.isFlooded()) {
+                        terrainBuilder.append("-");
+                    } else {
+                        terrainBuilder.append(" ");
+                    }
+                    terrainBuilder.append(currentCell.getHeight()).append("\t");
                 }
-                terrainBuilder.append(currentLocation.getHeight()).append("\t");
             }
             terrainBuilder.deleteCharAt(terrainBuilder.length() - 1);
             terrainBuilder.append("\n");
@@ -147,12 +155,12 @@ public class Terrain {
         this.size = size;
     }
 
-    public List<GridLocation> getLocations() {
-        return locations;
+    public List<GridCell> getCells() {
+        return cells;
     }
 
-    public void setLocations(List<GridLocation> locations) {
-        this.locations = locations;
+    public void setCells(List<GridCell> cells) {
+        this.cells = cells;
     }
 
 }

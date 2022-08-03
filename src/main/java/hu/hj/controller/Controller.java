@@ -1,4 +1,4 @@
-package hu.hj;
+package hu.hj.controller;
 
 import hu.hj.io.InputManager;
 import hu.hj.io.Printer;

@@ -18,20 +18,20 @@ public class TerrainGenerator {
     public Terrain generateTerrain() {
         Terrain terrain = new Terrain(size);
         generateHills(terrain);
-        GridLocation[] minMax = terrain.getMinAndMaxHeightLocation();
+        GridCell[] minMax = terrain.getMinAndMaxHeightCell();
         normalize(terrain, minMax);
         return terrain;
     }
 
     private void generateHills(Terrain terrain) {
-        List<GridLocation> hills = new ArrayList<>();
+        List<GridCell> hills = new ArrayList<>();
         for (int i = 0; i < terrain.getSize(); i++) {
             generateHill(terrain, hills);
         }
     }
 
-    private void generateHill(Terrain terrain, List<GridLocation> hills) {
-        GridLocation hill = generateHill(radius, hills);
+    private void generateHill(Terrain terrain, List<GridCell> hills) {
+        GridCell hill = generateHill(radius, hills);
         updateTerrain(terrain, hill);
     }
 
@@ -47,75 +47,75 @@ public class TerrainGenerator {
         return heuristicRadius;
     }
 
-    private GridLocation generateHill(int radius, List<GridLocation> hills) {
-        GridLocation currentLocation;
+    private GridCell generateHill(int radius, List<GridCell> hills) {
+        GridCell currentCell;
         do {
-            int xCoordinate = RANDOM.nextInt(size + radius) - radius;
-            int yCoordinate = RANDOM.nextInt(size + radius) - radius;
-            currentLocation = new GridLocation(xCoordinate, yCoordinate);
+            int rowIndex = RANDOM.nextInt(size + radius) - radius;
+            int columnIndex = RANDOM.nextInt(size + radius) - radius;
+            currentCell = new GridCell(rowIndex, columnIndex);
             if (hills.isEmpty()) {
-                hills.add(currentLocation);
+                hills.add(currentCell);
                 break;
             }
-        } while (getClosestDistance(hills, currentLocation) < radius * radius / Math.log(size));
-        hills.add(currentLocation);
-        return currentLocation;
+        } while (getClosestDistance(hills, currentCell) < radius * radius / Math.log(size));
+        hills.add(currentCell);
+        return currentCell;
     }
 
-    private void updateTerrain(Terrain terrain, GridLocation hill) {
-        int xMin;
-        int xMax;
-        int yMin;
-        int yMax;
+    private void updateTerrain(Terrain terrain, GridCell hill) {
+        int rowMin;
+        int rowMax;
+        int colMin;
+        int colMax;
 
-        xMin = Math.max(hill.getRowIndex() - radius - 1, 0);
+        rowMin = Math.max(hill.getPosition().getRowIndex() - radius - 1, 0);
 
-        if (hill.getRowIndex() + radius + 1 >= size) {
-            xMax = size - 1;
+        if (hill.getPosition().getRowIndex() + radius + 1 >= size) {
+            rowMax = size - 1;
         } else {
-            xMax = hill.getRowIndex() + radius + 1;
+            rowMax = hill.getPosition().getRowIndex() + radius + 1;
         }
 
-        yMin = Math.max(hill.getColumnIndex() - radius - 1, 0);
+        colMin = Math.max(hill.getPosition().getColumnIndex() - radius - 1, 0);
 
-        if (hill.getColumnIndex() + radius + 1 >= size) {
-            yMax = size - 1;
+        if (hill.getPosition().getColumnIndex() + radius + 1 >= size) {
+            colMax = size - 1;
         } else {
-            yMax = hill.getColumnIndex() + radius + 1;
+            colMax = hill.getPosition().getColumnIndex() + radius + 1;
         }
 
-        updateHillEnvironment(terrain, hill, new int[]{xMin, xMax, yMin, yMax});
+        updateHillEnvironment(terrain, hill, new int[]{rowMin, rowMax, colMin, colMax});
     }
 
-    private void updateHillEnvironment(Terrain terrain, GridLocation hill, int[] bounds) {
+    private void updateHillEnvironment(Terrain terrain, GridCell hill, int[] bounds) {
         int radiusSquare = radius * radius;
         int height;
         for (int i = bounds[0]; i <= bounds[1]; i++) {
             for (int j = bounds[2]; j <= bounds[3]; j++) {
-                GridLocation currentLocation = terrain.getLocationAt(i, j);
-                height = radiusSquare - hill.calculateSquareDistance(currentLocation);
+                GridCell currentCell = terrain.getCellAt(i, j);
+                height = radiusSquare - hill.getPosition().calculateSquareDistance(currentCell.getPosition());
                 if (height > 0) {
-                    currentLocation.setHeight(currentLocation.getHeight() + height);
+                    currentCell.setHeight(currentCell.getHeight() + height);
                 }
             }
         }
     }
 
-    private int getClosestDistance(List<GridLocation> hills, GridLocation hillCandidate) {
+    private int getClosestDistance(List<GridCell> hills, GridCell hillCandidate) {
         int closestDistance = Integer.MAX_VALUE;
-        for (GridLocation hill : hills) {
-            closestDistance = Math.min(hillCandidate.calculateSquareDistance(hill), closestDistance);
+        for (GridCell hill : hills) {
+            closestDistance = Math.min(hillCandidate.getPosition().calculateSquareDistance(hill.getPosition()), closestDistance);
         }
         return closestDistance;
     }
 
-    private void normalize(Terrain terrain, GridLocation[] minMax) {
-        for (GridLocation location : terrain.getLocations()) {
-            double norm = (double) (location.getHeight() - minMax[0].getHeight()) / (minMax[1].getHeight() - minMax[0].getHeight());
+    private void normalize(Terrain terrain, GridCell[] minMax) {
+        for (GridCell cell : terrain.getCells()) {
+            double norm = (double) (cell.getHeight() - minMax[0].getHeight()) / (minMax[1].getHeight() - minMax[0].getHeight());
             if (norm < (double) 1 / size) {
                 norm += (double) 1 / size;
             }
-            location.setHeight((int) (norm * size));
+            cell.setHeight((int) (norm * size));
         }
     }
 

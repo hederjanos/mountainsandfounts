@@ -12,26 +12,44 @@ public class InputManager {
     public MainStates handleMainMenu() {
         MainStates state;
         String option = scanner.nextLine();
-        state = switch (option) {
-            case "0" -> MainStates.QUIT;
-            case "1" -> MainStates.NEW_SIMULATION;
-            case "2" -> MainStates.RERUN_SIMULATION;
-            case "3" -> MainStates.DISPLAY_MENU;
-            default -> MainStates.INVALID;
-        };
+        switch (option) {
+            case "0":
+                state = MainStates.QUIT;
+                break;
+            case "1":
+                state = MainStates.NEW_SIMULATION;
+                break;
+            case "2":
+                state = MainStates.RERUN_SIMULATION;
+                break;
+            case "3":
+                state = MainStates.DISPLAY_MENU;
+                break;
+            default:
+                state = MainStates.INVALID;
+        }
         return state;
     }
 
     public SimulationStates handleSimulationMenu() {
         SimulationStates state;
         String option = scanner.nextLine();
-        state = switch (option) {
-            case "0" -> SimulationStates.QUIT_TO_MAIN;
-            case "1" -> SimulationStates.SIMULATION_CONSOLE;
-            case "2" -> SimulationStates.SIMULATION_GIF;
-            case "3" -> SimulationStates.DISPLAY_MENU;
-            default -> SimulationStates.INVALID;
-        };
+        switch (option) {
+            case "0":
+                state = SimulationStates.QUIT_TO_MAIN;
+                break;
+            case "1":
+                state = SimulationStates.SIMULATION_CONSOLE;
+                break;
+            case "2":
+                state = SimulationStates.SIMULATION_GIF;
+                break;
+            case "3":
+                state = SimulationStates.DISPLAY_MENU;
+                break;
+            default:
+                state = SimulationStates.INVALID;
+        }
         return state;
     }
 
